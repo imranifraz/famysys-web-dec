@@ -1,0 +1,162 @@
+/* ==========================================================================
+   Famysys Studio — Corporate Deck
+   Design tokens derived from the real brand logo (cream #F4F1E8 mark on a
+   dark field). No colors are invented beyond neutral black/white/gray —
+   swap --font-display / --font-body if a brand type spec becomes available.
+   ========================================================================== */
+
+:root {
+  /* Brand palette — extracted directly from the live Famysys Studio site
+     (studio.famysys.com) computed styles / CSS custom properties. Nothing
+     here is invented; see the design-token names on the real site for the
+     source of each value (--color-section-alt, --color-text-on-dark, etc). */
+  --color-cream: #f1ebdd; /* --color-text-on-dark */
+  --color-cream-dim: rgba(242, 237, 225, 0.8); /* --color-canvas-80 */
+  --color-cream-faint: rgba(242, 237, 225, 0.4); /* --color-canvas-40 */
+  --color-cream-ghost: rgba(242, 237, 225, 0.16); /* --color-canvas-16 */
+
+  /* Dark canvas — the site's hero/section-alt green, not an invented black */
+  --color-ink: #1e3a31; /* --color-section-alt */
+  --color-ink-raised: #12251f; /* --color-ink — used here as a recessed surface */
+  --color-ink-line: rgba(242, 237, 225, 0.16); /* --color-hairline-on-section-alt */
+  --color-bg-outer: #0b1613; /* --color-header-ground, viewport backdrop */
+
+  --color-fg: var(--color-cream);
+  --color-bg: var(--color-ink);
+
+  /* Accent — the site's burgundy CTA color and its on-dark variants */
+  --color-accent: #7e1b33; /* --color-accent */
+  --color-accent-hover: #6f1c30; /* --color-primary-button-hover */
+  --color-accent-on-dark: #f0a8b8; /* --color-accent-on-dark */
+  --color-accent-hover-on-dark: #cc93a0; /* --color-primary-button-hover-on-dark */
+  --color-accent-warm: #d6a03c; /* --color-accent-warm */
+  --color-accent-highlight: #66e0b0; /* --color-accent-highlight */
+
+  --radius-sm: 4px;
+
+  /* Typography — the real H1 is set in Jost itself (not a separate serif);
+     Instrument Serif is used only as a small italic accent on the site. */
+  --font-display: 'Jost', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Jost', ui-sans-serif, system-ui, sans-serif;
+  --font-accent: 'Instrument Serif', ui-serif, Georgia, serif;
+
+  /* Presentation canvas (fixed design resolution, scaled to fit viewport) */
+  --stage-w: 1920px;
+  --stage-h: 1080px;
+
+  /* Motion */
+  --ease-lux: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-slide: 0.72s;
+  --dur-section: 1.05s;
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg-outer);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  touch-action: pan-y;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font-family: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--color-cream);
+  color: var(--color-ink);
+}
+
+/* Focus visibility for keyboard users */
+:focus-visible {
+  outline: 1.5px solid var(--color-cream);
+  outline-offset: 4px;
+}
+
+/* ---- shared typographic utilities used across slides ---- */
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 15px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-cream-dim);
+  font-weight: 500;
+}
+
+.display-xl {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+}
+
+.display-lg {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+}
+
+.body-lg {
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-cream-dim);
+}
+
+.hairline {
+  height: 1px;
+  width: 100%;
+  background: var(--color-ink-line);
+  border: none;
+}
+
+.vhairline {
+  width: 1px;
+  background: var(--color-ink-line);
+  border: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
