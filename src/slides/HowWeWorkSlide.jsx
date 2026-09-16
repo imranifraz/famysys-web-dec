@@ -4,42 +4,76 @@ import { SectionHeadline } from '../components/SectionHeadline.jsx'
 import { ProcessStep } from '../components/ProcessStep.jsx'
 import { StaggerGroup, StaggerItem } from '../components/Stagger.jsx'
 import { GhostNumeral } from '../components/GhostNumeral.jsx'
+import { useIsMobile } from '../components/ViewportContext.jsx'
 import { DEPTH } from '../components/motion.js'
-import { SAFE } from '../components/layout.js'
+import { safeInsets } from '../components/layout.js'
 import { processSteps } from '../data/content.js'
 
 export default function HowWeWorkSlide({ meta }) {
+  const isMobile = useIsMobile()
+  const SAFE = safeInsets(isMobile)
+
   return (
     <div style={styles.root}>
       <Layer depth={DEPTH.background}>
-        <GhostNumeral value={meta.index} />
+        <GhostNumeral value={meta.index} compact={isMobile} />
       </Layer>
 
-      <Layer depth={DEPTH.content} style={styles.main}>
-        <div style={styles.top}>
+      <Layer
+        depth={DEPTH.content}
+        style={{
+          ...styles.main,
+          left: SAFE.side,
+          right: SAFE.side,
+          top: isMobile ? 64 : 152,
+          bottom: isMobile ? SAFE.bottom : 220,
+          gap: isMobile ? '20px' : '44px',
+          overflowY: isMobile ? 'auto' : 'visible',
+          WebkitOverflowScrolling: 'touch',
+          overscrollBehavior: 'contain',
+        }}
+      >
+        <div style={{ ...styles.top, gap: isMobile ? '14px' : '22px' }}>
           <SectionLabel index={meta.index} total={meta.total} title={meta.title} />
-          <SectionHeadline className="display-lg" style={styles.headline}>
+          <SectionHeadline
+            className="display-lg"
+            style={{ ...styles.headline, fontSize: isMobile ? '32px' : '68px', maxWidth: isMobile ? 'none' : '1100px' }}
+          >
             From your idea to finished content.
           </SectionHeadline>
         </div>
 
-        <StaggerGroup style={styles.steps}>
+        <StaggerGroup
+          style={{
+            ...styles.steps,
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? '22px' : '40px',
+          }}
+        >
           {processSteps.map((step, i) => (
-            <StaggerItem key={step.index} style={styles.stepItem}>
+            <StaggerItem key={step.index} style={isMobile ? styles.stepItemMobile : styles.stepItem}>
               <ProcessStep
                 index={step.index}
                 title={step.title}
                 copy={step.copy}
                 isLast={i === processSteps.length - 1}
+                compact={isMobile}
+                vertical={isMobile}
               />
             </StaggerItem>
           ))}
         </StaggerGroup>
+
+        {isMobile && (
+          <p style={styles.closingTextMobile}>You bring the idea. We bring it to life.</p>
+        )}
       </Layer>
 
-      <Layer depth={DEPTH.decorative} style={styles.closing}>
-        <p style={styles.closingText}>You bring the idea. We bring it to life.</p>
-      </Layer>
+      {!isMobile && (
+        <Layer depth={DEPTH.decorative} style={{ ...styles.closing, left: SAFE.side, right: SAFE.side }}>
+          <p style={styles.closingText}>You bring the idea. We bring it to life.</p>
+        </Layer>
+      )}
     </div>
   )
 }
@@ -52,33 +86,29 @@ const styles = {
   },
   main: {
     position: 'absolute',
-    left: SAFE.side,
-    right: SAFE.side,
-    top: 152,
     display: 'flex',
     flexDirection: 'column',
-    gap: '44px',
   },
   top: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '22px',
+    flexShrink: 0,
   },
-  headline: {
-    fontSize: '68px',
-    maxWidth: '1100px',
-  },
+  headline: {},
   steps: {
     display: 'flex',
-    gap: '40px',
+    minHeight: 0,
   },
   stepItem: {
     flex: 1,
+    minWidth: 0,
+  },
+  stepItemMobile: {
+    flex: '0 0 auto',
+    width: '100%',
   },
   closing: {
     position: 'absolute',
-    left: SAFE.side,
-    right: SAFE.side,
     bottom: 130,
   },
   closingText: {
@@ -87,5 +117,13 @@ const styles = {
     fontSize: '32px',
     color: 'var(--color-cream)',
     margin: 0,
+  },
+  closingTextMobile: {
+    fontFamily: 'var(--font-accent)',
+    fontStyle: 'italic',
+    fontSize: '18px',
+    color: 'var(--color-cream)',
+    margin: '8px 0 0',
+    flexShrink: 0,
   },
 }

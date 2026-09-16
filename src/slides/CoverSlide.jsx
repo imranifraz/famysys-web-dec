@@ -37,20 +37,21 @@ export default function CoverSlide() {
         gap: isMobile ? '18px' : '28px',
         maxWidth: isMobile ? 'none' : '1420px',
         paddingTop: isMobile ? 24 : 0,
+        paddingBottom: isMobile ? SAFE.bottom : 0,
       }}>
-        <span className="eyebrow" style={{ ...styles.brand, fontSize: isMobile ? '13px' : '17px' }}>
+        <span className="eyebrow" style={{ ...styles.brand, fontSize: isMobile ? '12px' : '17px' }}>
           Famysys Studio
         </span>
         <SectionHeadline
           as="h1"
           className="display-xl"
-          style={{ ...styles.headline, fontSize: isMobile ? '42px' : '96px', maxWidth: isMobile ? 'none' : '1300px' }}
+          style={{ ...styles.headline, fontSize: isMobile ? '36px' : '96px', maxWidth: isMobile ? 'none' : '1300px' }}
         >
           Where creativity
           <br />
           meets <em style={styles.headlineAccent}>speed.</em>
         </SectionHeadline>
-        <p style={{ ...styles.supporting, fontSize: isMobile ? '15px' : '20px' }}>
+        <p style={{ ...styles.supporting, fontSize: isMobile ? '14px' : '20px' }}>
           Design • Video • AI Content • Motion • Product Visuals
         </p>
       </Layer>

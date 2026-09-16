@@ -58,23 +58,38 @@ function computeScale(vw, vh) {
   }
 }
 
+function readViewportSize() {
+  const vv = typeof window !== 'undefined' ? window.visualViewport : null
+  return {
+    vw: Math.round(vv?.width || window.innerWidth),
+    vh: Math.round(vv?.height || window.innerHeight),
+  }
+}
+
 export function useStageScale() {
-  const [state, setState] = useState(() =>
-    typeof window === 'undefined'
-      ? { scale: 1, fill: true, isMobile: false, stageWidth: STAGE_W, stageHeight: STAGE_H }
-      : computeScale(window.innerWidth, window.innerHeight),
-  )
+  const [state, setState] = useState(() => {
+    if (typeof window === 'undefined') {
+      return { scale: 1, fill: true, isMobile: false, stageWidth: STAGE_W, stageHeight: STAGE_H }
+    }
+    const { vw, vh } = readViewportSize()
+    return computeScale(vw, vh)
+  })
 
   useEffect(() => {
     function recalc() {
-      setState(computeScale(window.innerWidth, window.innerHeight))
+      const { vw, vh } = readViewportSize()
+      setState(computeScale(vw, vh))
     }
     recalc()
     window.addEventListener('resize', recalc)
     window.addEventListener('orientationchange', recalc)
+    window.visualViewport?.addEventListener('resize', recalc)
+    window.visualViewport?.addEventListener('scroll', recalc)
     return () => {
       window.removeEventListener('resize', recalc)
       window.removeEventListener('orientationchange', recalc)
+      window.visualViewport?.removeEventListener('resize', recalc)
+      window.visualViewport?.removeEventListener('scroll', recalc)
     }
   }, [])
 

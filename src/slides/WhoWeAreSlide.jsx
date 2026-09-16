@@ -27,8 +27,9 @@ export default function WhoWeAreSlide({ meta }) {
           top: isMobile ? 64 : 140,
           bottom: SAFE.bottom,
           gap: isMobile ? '28px' : '48px',
-          overflowY: isMobile ? 'auto' : 'visible',
+          overflow: isMobile ? 'auto' : 'hidden',
           WebkitOverflowScrolling: 'touch',
+          overscrollBehavior: 'contain',
         }}
       >
         <div style={{ ...styles.top, gap: isMobile ? '16px' : '28px' }}>
@@ -46,7 +47,7 @@ export default function WhoWeAreSlide({ meta }) {
             className="display-lg"
             style={{
               ...styles.headline,
-              fontSize: isMobile ? '34px' : '72px',
+              fontSize: isMobile ? '30px' : '72px',
               maxWidth: isMobile ? 'none' : '1180px',
             }}
           >

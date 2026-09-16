@@ -28,13 +28,14 @@ export default function WaysToWorkSlide({ meta }) {
           top: isMobile ? 64 : 140,
           bottom: isMobile ? SAFE.bottom : 220,
           gap: isMobile ? '20px' : '40px',
-          overflowY: isMobile ? 'auto' : 'visible',
+          overflow: isMobile ? 'auto' : 'hidden',
           WebkitOverflowScrolling: 'touch',
+          overscrollBehavior: 'contain',
         }}
       >
         <div style={{ ...styles.top, gap: isMobile ? '14px' : '24px' }}>
           <SectionLabel index={meta.index} total={meta.total} title={meta.title} />
-          <SectionHeadline className="display-lg" style={{ ...styles.headline, fontSize: isMobile ? '34px' : '80px' }}>
+          <SectionHeadline className="display-lg" style={{ ...styles.headline, fontSize: isMobile ? '30px' : '80px' }}>
             Work with us your way.
           </SectionHeadline>
         </div>

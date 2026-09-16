@@ -6,14 +6,44 @@ import skillhubImg from '../assets/portfolio/websites/skillhub.webp'
 import lenaDenaImg from '../assets/portfolio/websites/lena-dena.png'
 import kahFishImg from '../assets/portfolio/websites/kah-fish.png'
 import hajjUmrahImg from '../assets/portfolio/websites/hajj-umrah.jpg'
-import aspirasysBannerImg from '../assets/portfolio/print-design/banners/aspirasys-internship.jpg'
-import srFoodkraftBannerImg from '../assets/portfolio/print-design/banners/sr-foodkraft.jpg'
-import misshePosterImg from '../assets/portfolio/print-design/posters/misshe-award-show.jpg'
-import bagsShoesPosterImg from '../assets/portfolio/print-design/posters/bags-shoes.jpg'
-import techzoneEidPosterImg from '../assets/portfolio/print-design/posters/techzone-eid.jpg'
-import socialFlyersProductImg from '../assets/portfolio/print-design/product-posters/social-flyers-banners.jpg'
-import megaBundleProductImg from '../assets/portfolio/print-design/product-posters/mega-bundle.jpg'
-import youtubeThumbnailsProductImg from '../assets/portfolio/print-design/product-posters/youtube-thumbnails.jpg'
+import exclusiveBonusesPosterImg from '../assets/portfolio/print-design/posters/exclusive-bonuses.jpg'
+import stunningThumbnailsPosterImg from '../assets/portfolio/print-design/posters/stunning-thumbnails.jpg'
+import moreCollectionsPosterImg from '../assets/portfolio/print-design/posters/more-collections-thumbnails.jpg'
+import designYourWayPosterImg from '../assets/portfolio/print-design/posters/design-your-way.jpg'
+import templateShowcasePosterImg from '../assets/portfolio/print-design/posters/template-showcase-grid.jpg'
+import nicheTemplatePackPosterImg from '../assets/portfolio/print-design/posters/niche-template-pack.jpg'
+import transformAnythingPosterImg from '../assets/portfolio/print-design/posters/transform-anything.jpg'
+import thumbnailCollagePosterImg from '../assets/portfolio/print-design/posters/thumbnail-collage.jpg'
+import tenThousandTemplatesPosterImg from '../assets/portfolio/print-design/posters/ten-thousand-templates.jpg'
+import launchReadyDesignsPosterImg from '../assets/portfolio/print-design/posters/launch-ready-designs.jpg'
+import superMaxSanitizerPosterImg from '../assets/portfolio/print-design/posters/super-max-sanitizer.jpg'
+import megaBundleFlyersPosterImg from '../assets/portfolio/print-design/posters/mega-bundle-flyers.jpg'
+import whatsIncludedPosterImg from '../assets/portfolio/print-design/posters/whats-included.jpg'
+import dragDropPostPosterImg from '../assets/portfolio/print-design/posters/drag-drop-post.jpg'
+import templatesEveryNichePosterImg from '../assets/portfolio/print-design/posters/templates-every-niche.jpg'
+import resellersCreatorsPosterImg from '../assets/portfolio/print-design/posters/resellers-creators.jpg'
+import youtubeThumbnailsPackPosterImg from '../assets/portfolio/print-design/posters/youtube-thumbnails-pack.jpg'
+import tenKMegaBundlePosterImg from '../assets/portfolio/print-design/posters/ten-k-mega-bundle.jpg'
+import nicheCategoriesPosterImg from '../assets/portfolio/print-design/posters/niche-categories.jpg'
+import missheAwardShowPosterImg from '../assets/portfolio/print-design/posters/misshe-award-show.jpg'
+import openInCanvaPosterImg from '../assets/portfolio/print-design/posters/open-in-canva.jpg'
+import bonusAssetsIncludedPosterImg from '../assets/portfolio/print-design/posters/bonus-assets-included.jpg'
+import earbudsSmartTouchProductImg from '../assets/portfolio/print-design/product-posters/earbuds-smart-touch.jpg'
+import earbudsChargingCaseProductImg from '../assets/portfolio/print-design/product-posters/earbuds-charging-case.jpg'
+import earbudsQuadMicProductImg from '../assets/portfolio/print-design/product-posters/earbuds-quad-mic.jpg'
+import nissanGtrProductImg from '../assets/portfolio/print-design/product-posters/nissan-gtr-r35-render.jpg'
+import earbudsProductHeroImg from '../assets/portfolio/print-design/product-posters/earbuds-product-hero.jpg'
+import earbuds50HrsProductImg from '../assets/portfolio/print-design/product-posters/earbuds-50hrs-playtime.jpg'
+import chennaiSheekMenuImg from '../assets/portfolio/print-design/banners/chennai-sheek-king-menu.jpg'
+import srFoodkraftPizzaImg from '../assets/portfolio/print-design/banners/sr-foodkraft-pizza.jpg'
+import chennaiSheekStallImg from '../assets/portfolio/print-design/banners/chennai-sheek-king-stall.jpg'
+import chennaiSheekGrandOpeningImg from '../assets/portfolio/print-design/banners/chennai-sheek-king-grand-opening.jpg'
+import chennaiSheekDeliveryImg from '../assets/portfolio/print-design/banners/chennai-sheek-king-delivery.jpg'
+import srFoodkraftMenuBoardImg from '../assets/portfolio/print-design/banners/sr-foodkraft-menu-board.jpg'
+import chennaiSheekFullMenuImg from '../assets/portfolio/print-design/banners/chennai-sheek-king-full-menu.jpg'
+import chennaiSheekPriceMenuImg from '../assets/portfolio/print-design/banners/chennai-sheek-king-price-menu.jpg'
+import srFoodkraftStallImg from '../assets/portfolio/print-design/banners/sr-foodkraft-stall.jpg'
+import chennaiSheekBestsellersImg from '../assets/portfolio/print-design/banners/chennai-sheek-king-bestsellers.jpg'
 
 export const whoWeAre = {
   headline: 'Famysys is a founder-led technology partner.',
@@ -268,16 +298,20 @@ export const portfolioCategories = [
     },
     videos: [
       {
-        title: 'Business Tips',
-        src: 'https://drive.google.com/file/d/1HCrRxq40Utr5pfWqD7hkUPY3NHiCT_YE/preview',
+        title: 'Before vs After - Imported',
+        src: 'https://drive.google.com/file/d/1RnvYjZq6x727HBbUsALsJwxuKrLvePXS/preview',
       },
       {
-        title: 'Frozen Foods',
-        src: 'https://drive.google.com/file/d/1LxoEepYJ1O9a-xN5CZ0NiaGp33zYqAcb/preview',
+        title: 'Before vs After - Burger Cafe',
+        src: 'https://drive.google.com/file/d/11lP5-KN87haqGIYmdDLh7fLb4nz42O0z/preview',
       },
       {
-        title: 'Ghee',
-        src: 'https://drive.google.com/file/d/18bLH9SOCBUloiUb22PmI3ZafSZuR5O5z/preview',
+        title: 'Before vs After - Ice Cream',
+        src: 'https://drive.google.com/file/d/15h4Nx-oqZH0DS1aKpZPfDjhZ4xez5uL2/preview',
+      },
+      {
+        title: 'GFT Before After',
+        src: 'https://drive.google.com/file/d/1Pwnv1eG31ZCAKKa96PZQbUzARJJAuttd/preview',
       },
     ],
   },
@@ -293,16 +327,28 @@ export const portfolioCategories = [
     },
     videos: [
       {
+        title: 'INTRODUCING NI DIGITAL ORG',
+        src: 'https://drive.google.com/file/d/1wakhhx4FO4nHQx9cawsHpS4FN5EABhvP/preview',
+      },
+      {
         title: 'AspiraSys Introduction',
         src: 'https://drive.google.com/file/d/1oRYmOchAM-7GQJfF-pAV9PJm9-NID1Nt/preview',
       },
       {
-        title: 'Introducing NI Digital Org',
-        src: 'https://drive.google.com/file/d/1wakhhx4FO4nHQx9cawsHpS4FN5EABhvP/preview',
+        title: 'Unlock Your Dream IT Career',
+        src: 'https://drive.google.com/file/d/1ScURiN-1hpoSMTgn0KHMf7IPC7y3Yz3B/preview',
       },
       {
-        title: 'IT Career Roadmap Shorts',
+        title: 'Sep - Invitation 2026',
         src: 'https://drive.google.com/file/d/1Emk9B0eTdI5rpn_WDRz3L44URoOgSAoe/preview',
+      },
+      {
+        title: 'Invitaion',
+        src: 'https://drive.google.com/file/d/178oRW5bP7TvksehDtf6SkIVz-MNDn4Hz/preview',
+      },
+      {
+        title: 'Wedding invitation',
+        src: 'https://drive.google.com/file/d/1aITlvIN8ePl7i8xRYzzx4eoNYHT6Pe4Q/preview',
       },
     ],
   },
@@ -318,15 +364,43 @@ export const portfolioCategories = [
     },
     videos: [
       {
-        title: 'CIPL - Induction for New Joinee',
+        title: 'Control Your CPARS to Win More Contracts',
         src: 'https://drive.google.com/file/d/1qXUtHdtX5h0RfcfPiQ7qUccUEwvRZK5j/preview',
       },
       {
-        title: 'Control Your CPARS to Win More Contracts',
+        title: 'CPARS Million Dollar Wake Up',
         src: 'https://drive.google.com/file/d/1B6g7KnKRtYJP84-BXq2G_mQoH-h7nQM6/preview',
       },
       {
-        title: 'CPARS Million Dollar Wake Up',
+        title: 'Define Epidemology',
+        src: 'https://drive.google.com/file/d/16z1udmRORm3h-EcbBiP1dr3qE06hXHWf/preview',
+      },
+      {
+        title: 'Mastering Risk and Odds Calculations in Epidemiological Studies',
+        src: 'https://drive.google.com/file/d/1YyKrP2TuOKMZpyjP8FMK_6156sepXhEQ/preview',
+      },
+      {
+        title: 'R&B Web Promo',
+        src: 'https://drive.google.com/file/d/1-lkiXrKMIrVfziDMDH-gmLRD1i1ZJD8h/preview',
+      },
+      {
+        title: 'The Future Of Software Development',
+        src: 'https://drive.google.com/file/d/1t6V0rkdwu71JcDvBUJ7TFXL0TFLn7UZv/preview',
+      },
+      {
+        title: 'The Significance of Risk & Odd in Epidemology',
+        src: 'https://drive.google.com/file/d/12I5EJeiY15Ue1ANkUeN-FupDlqO-JgoZ/preview',
+      },
+      {
+        title: 'Want a HIGH-PAYING Career Here’s the ONLY Formula That Works!',
+        src: 'https://drive.google.com/file/d/1WEfvC38RD0xF6deV0zhXlPkUTXH5uaRK/preview',
+      },
+      {
+        title: 'Want to Start a Career in IT but Don’t Know Where to Begin',
+        src: 'https://drive.google.com/file/d/1IaTcG6K4Z3k2QehwFBZ8IxnpWV1lkcsO/preview',
+      },
+      {
+        title: 'CIPL - Induction for New Joinee',
         src: 'https://drive.google.com/file/d/1MrliDwNmAk53Z35z-bM6P_xjulS0f6a5/preview',
       },
     ],
@@ -371,61 +445,215 @@ export const portfolioCategories = [
       {
         key: 'banners',
         label: 'Banners',
-        ratio: 'landscape',
+        ratio: 'portrait',
         images: [
           {
-            key: 'aspirasys-internship',
-            title: 'AspiraSys Internship Program',
-            image: aspirasysBannerImg,
+            key: 'chennai-sheek-king-menu',
+            title: 'Chennai Sheek King Menu',
+            image: chennaiSheekMenuImg,
           },
           {
-            key: 'sr-foodkraft',
-            title: 'SR Foodkraft',
-            image: srFoodkraftBannerImg,
+            key: 'sr-foodkraft-pizza',
+            title: 'SR Foodkraft Pizza',
+            image: srFoodkraftPizzaImg,
+          },
+          {
+            key: 'chennai-sheek-king-stall',
+            title: 'Chennai Sheek King Stall',
+            image: chennaiSheekStallImg,
+          },
+          {
+            key: 'chennai-sheek-king-grand-opening',
+            title: 'Chennai Sheek King Grand Opening',
+            image: chennaiSheekGrandOpeningImg,
+          },
+          {
+            key: 'chennai-sheek-king-delivery',
+            title: 'Chennai Sheek King Delivery',
+            image: chennaiSheekDeliveryImg,
+          },
+          {
+            key: 'sr-foodkraft-menu-board',
+            title: 'SR Foodkraft Menu Board',
+            image: srFoodkraftMenuBoardImg,
+          },
+          {
+            key: 'chennai-sheek-king-full-menu',
+            title: 'Chennai Sheek King Full Menu',
+            image: chennaiSheekFullMenuImg,
+          },
+          {
+            key: 'chennai-sheek-king-price-menu',
+            title: 'Chennai Sheek King Price Menu',
+            image: chennaiSheekPriceMenuImg,
+          },
+          {
+            key: 'sr-foodkraft-stall',
+            title: 'SR Foodkraft Stall',
+            image: srFoodkraftStallImg,
+          },
+          {
+            key: 'chennai-sheek-king-bestsellers',
+            title: 'Chennai Sheek King Bestsellers',
+            image: chennaiSheekBestsellersImg,
           },
         ],
       },
       {
         key: 'posters',
         label: 'Posters',
-        ratio: 'portrait',
+        ratio: 'square',
         images: [
+          {
+            key: 'exclusive-bonuses',
+            title: 'Exclusive Bonuses',
+            image: exclusiveBonusesPosterImg,
+          },
+          {
+            key: 'stunning-thumbnails',
+            title: 'Stunning Thumbnails',
+            image: stunningThumbnailsPosterImg,
+          },
+          {
+            key: 'more-collections-thumbnails',
+            title: 'More Collections — Thumbnails',
+            image: moreCollectionsPosterImg,
+            ratio: 'portrait',
+          },
+          {
+            key: 'design-your-way',
+            title: 'Design Your Way',
+            image: designYourWayPosterImg,
+          },
+          {
+            key: 'template-showcase-grid',
+            title: 'Template Showcase',
+            image: templateShowcasePosterImg,
+          },
+          {
+            key: 'niche-template-pack',
+            title: 'Niche Template Pack',
+            image: nicheTemplatePackPosterImg,
+          },
+          {
+            key: 'transform-anything',
+            title: 'Transform Anything',
+            image: transformAnythingPosterImg,
+          },
+          {
+            key: 'thumbnail-collage',
+            title: 'Thumbnail Collage',
+            image: thumbnailCollagePosterImg,
+          },
+          {
+            key: 'ten-thousand-templates',
+            title: '10,000+ Templates',
+            image: tenThousandTemplatesPosterImg,
+          },
+          {
+            key: 'launch-ready-designs',
+            title: 'Launch-Ready Designs',
+            image: launchReadyDesignsPosterImg,
+          },
+          {
+            key: 'super-max-sanitizer',
+            title: 'Super Max Sanitizer Label',
+            image: superMaxSanitizerPosterImg,
+            ratio: 'landscape',
+          },
+          {
+            key: 'mega-bundle-flyers',
+            title: 'Mega Bundle Flyers',
+            image: megaBundleFlyersPosterImg,
+          },
+          {
+            key: 'whats-included',
+            title: "What's Included",
+            image: whatsIncludedPosterImg,
+          },
+          {
+            key: 'drag-drop-post',
+            title: 'Drag. Drop. Post.',
+            image: dragDropPostPosterImg,
+          },
+          {
+            key: 'templates-every-niche',
+            title: 'Templates for Every Niche',
+            image: templatesEveryNichePosterImg,
+          },
+          {
+            key: 'resellers-creators',
+            title: 'Designed for Resellers & Creators',
+            image: resellersCreatorsPosterImg,
+          },
+          {
+            key: 'youtube-thumbnails-pack',
+            title: 'YouTube Thumbnails Pack',
+            image: youtubeThumbnailsPackPosterImg,
+          },
+          {
+            key: 'ten-k-mega-bundle',
+            title: '10K Mega Bundle',
+            image: tenKMegaBundlePosterImg,
+          },
+          {
+            key: 'niche-categories',
+            title: 'Templates for Every Niche',
+            image: nicheCategoriesPosterImg,
+          },
           {
             key: 'misshe-award-show',
             title: "Mis'She Award Show Season 2",
-            image: misshePosterImg,
+            image: missheAwardShowPosterImg,
+            ratio: 'portrait',
           },
           {
-            key: 'bags-shoes',
-            title: 'Bags & Shoes',
-            image: bagsShoesPosterImg,
+            key: 'open-in-canva',
+            title: 'Open in Canva or Photoshop',
+            image: openInCanvaPosterImg,
           },
           {
-            key: 'techzone-eid',
-            title: 'Tech Zone Eid Mubarak',
-            image: techzoneEidPosterImg,
+            key: 'bonus-assets-included',
+            title: 'Bonus Assets Included',
+            image: bonusAssetsIncludedPosterImg,
           },
         ],
       },
       {
         key: 'product-posters',
         label: 'Product Posters',
-        ratio: 'landscape',
+        ratio: 'square',
         images: [
           {
-            key: 'social-flyers-banners',
-            title: 'Social Media Flyers & Banners',
-            image: socialFlyersProductImg,
+            key: 'earbuds-smart-touch',
+            title: 'Earbuds — Smart Touch Control',
+            image: earbudsSmartTouchProductImg,
           },
           {
-            key: 'mega-bundle',
-            title: '10K Mega Bundle',
-            image: megaBundleProductImg,
+            key: 'earbuds-charging-case',
+            title: 'Earbuds — Charging Case',
+            image: earbudsChargingCaseProductImg,
           },
           {
-            key: 'youtube-thumbnails',
-            title: 'YouTube Thumbnails',
-            image: youtubeThumbnailsProductImg,
+            key: 'earbuds-quad-mic',
+            title: 'Earbuds — Quad Mic ENC',
+            image: earbudsQuadMicProductImg,
+          },
+          {
+            key: 'nissan-gtr-r35-render',
+            title: 'Nissan GTR R35 — Blender Render',
+            image: nissanGtrProductImg,
+            ratio: 'portrait',
+          },
+          {
+            key: 'earbuds-product-hero',
+            title: 'Earbuds — Product Hero',
+            image: earbudsProductHeroImg,
+          },
+          {
+            key: 'earbuds-50hrs-playtime',
+            title: 'Earbuds — Up to 50 Hrs Playtime',
+            image: earbuds50HrsProductImg,
           },
         ],
       },

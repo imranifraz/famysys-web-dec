@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react'
+import { isMediaExpanded } from './mediaExpandLock.js'
 
 const DELTA_THRESHOLD = 24
 const COOLDOWN_MS = 750
@@ -13,6 +14,10 @@ export function useWheelNav({ onNext, onPrev }) {
 
   const onWheel = useCallback(
     (e) => {
+      if (isMediaExpanded()) return
+      // Let panels that intentionally scroll (Selected Work copy, etc.)
+      // handle the gesture instead of advancing the deck.
+      if (e.target?.closest?.('[data-scrollable-panel]')) return
       const now = Date.now()
       if (now - lastFired.current < COOLDOWN_MS) return
       if (Math.abs(e.deltaY) < DELTA_THRESHOLD) return

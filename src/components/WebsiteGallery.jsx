@@ -1,50 +1,304 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react'
+import { setMediaExpanded } from '../hooks/mediaExpandLock.js'
+import { useIsMobile } from './ViewportContext.jsx'
 import { EASE_LUX } from './motion.js'
 
 const DEFAULT_CARD_HEIGHT = 545
-const ANGLE = 30
+const ANGLE_DESKTOP = 30
+const ANGLE_MOBILE = 14
 const MAX_VISIBLE_OFFSET = 4
-// Breathing room between the gallery's left edge and the active card's
-// left edge — kept small and constant so the section reads as flush-left,
-// matching the details panel's own left-aligned text beside it.
+const MAX_VISIBLE_OFFSET_MOBILE = 2
 const EDGE_PADDING = 4
-// Cooldown between wheel steps so one trackpad flick doesn't skip several
-// projects, and so the coverflow transition can settle.
 const WHEEL_COOLDOWN_MS = 550
 
 function cardWidth(ratio, cardHeight) {
-  return ratio === 'portrait' ? cardHeight * (9 / 16) : cardHeight * (16 / 9)
+  if (ratio === 'portrait') return cardHeight * (9 / 16)
+  if (ratio === 'square') return cardHeight
+  return cardHeight * (16 / 9)
+}
+
+function stageAspect(ratio) {
+  if (ratio === 'portrait') return '9 / 16'
+  if (ratio === 'square') return '1 / 1'
+  return '16 / 9'
+}
+
+function dialogWidth(ratio, isMobile) {
+  if (isMobile) return 'min(100%, calc(100vw - 24px))'
+  if (ratio === 'portrait') return 'min(520px, 90vw)'
+  if (ratio === 'square') return 'min(780px, 88vw)'
+  return 'min(1280px, 92vw)'
+}
+
+function canExpand(project) {
+  return Boolean(project?.image || project?.previewUrl)
+}
+
+function ExpandModal({ project, ratio, index, total, canPrev, canNext, onPrev, onNext, onClose, isMobile }) {
+  const wheelLockRef = useRef(false)
+  const onPrevRef = useRef(onPrev)
+  const onNextRef = useRef(onNext)
+  const canPrevRef = useRef(canPrev)
+  const canNextRef = useRef(canNext)
+
+  useEffect(() => {
+    onPrevRef.current = onPrev
+    onNextRef.current = onNext
+    canPrevRef.current = canPrev
+    canNextRef.current = canNext
+  }, [onPrev, onNext, canPrev, canNext])
+
+  useEffect(() => {
+    setMediaExpanded(true)
+    return () => setMediaExpanded(false)
+  }, [])
+
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        e.stopPropagation()
+        onClose()
+        return
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault()
+        e.stopPropagation()
+        if (canPrevRef.current) onPrevRef.current()
+        return
+      }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault()
+        e.stopPropagation()
+        if (canNextRef.current) onNextRef.current()
+      }
+    }
+    window.addEventListener('keydown', onKey, true)
+    return () => window.removeEventListener('keydown', onKey, true)
+  }, [onClose])
+
+  const isPortrait = ratio === 'portrait'
+  const isSquare = ratio === 'square'
+
+  function onModalWheel(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    if (Math.abs(e.deltaY) < 8 && Math.abs(e.deltaX) < 8) return
+    if (wheelLockRef.current) return
+    wheelLockRef.current = true
+    window.setTimeout(() => {
+      wheelLockRef.current = false
+    }, WHEEL_COOLDOWN_MS)
+    const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX
+    if (delta > 0) {
+      if (canNextRef.current) onNextRef.current()
+    } else if (canPrevRef.current) {
+      onPrevRef.current()
+    }
+  }
+
+  return (
+    <motion.div
+      role="dialog"
+      aria-modal="true"
+      aria-label={project.title}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25, ease: EASE_LUX }}
+      style={{
+        ...styles.modalBackdrop,
+        padding: isMobile ? 'max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom))' : '24px',
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
+      onWheel={onModalWheel}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.98 }}
+        transition={{ duration: 0.3, ease: EASE_LUX }}
+        style={{
+          ...styles.modalDialog,
+          width: dialogWidth(ratio, isMobile),
+          maxHeight: isMobile ? 'min(900px, 92dvh)' : 'min(900px, 90vh)',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div style={styles.modalChrome}>
+          <div style={styles.modalMeta}>
+            <span style={styles.counter}>
+              {index + 1} / {total}
+            </span>
+            <span style={styles.modalTitle}>{project.title}</span>
+          </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onClose()
+            }}
+            style={styles.modalClose}
+            aria-label="Close expanded view"
+          >
+            <X size={18} strokeWidth={1.5} />
+          </button>
+        </div>
+
+        <div
+          style={{
+            ...styles.modalStage,
+            aspectRatio: stageAspect(ratio),
+            maxHeight: isMobile
+              ? 'min(70dvh, 560px)'
+              : isPortrait
+                ? 'min(780px, 78vh)'
+                : isSquare
+                  ? 'min(720px, 78vh)'
+                  : 'min(680px, 76vh)',
+          }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={project.key}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              style={styles.modalMedia}
+            >
+              {project.image ? (
+                <img src={project.image} alt={project.title} style={styles.modalImage} />
+              ) : project.previewUrl ? (
+                <iframe
+                  src={project.previewUrl}
+                  title={`${project.title} expanded preview`}
+                  style={styles.modalIframe}
+                  loading="lazy"
+                  sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                  referrerPolicy="no-referrer"
+                />
+              ) : null}
+            </motion.div>
+          </AnimatePresence>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onPrev()
+            }}
+            disabled={!canPrev}
+            style={{ ...styles.modalNavBtn, ...styles.modalNavPrev, opacity: canPrev ? 1 : 0.25 }}
+            aria-label="Previous media"
+          >
+            <ChevronLeft size={22} strokeWidth={1.5} />
+          </button>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onNext()
+            }}
+            disabled={!canNext}
+            style={{ ...styles.modalNavBtn, ...styles.modalNavNext, opacity: canNext ? 1 : 0.25 }}
+            aria-label="Next media"
+          >
+            <ChevronRight size={22} strokeWidth={1.5} />
+          </button>
+        </div>
+
+        <p style={styles.modalHint}>← → next · Esc to close</p>
+      </motion.div>
+    </motion.div>
+  )
 }
 
 /**
- * The same 3D "coverflow" carousel pattern as VideoGallery, adapted for
- * static project screenshots instead of embedded video — no iframe/player,
- * just an image (or a plain placeholder until real thumbnails are
- * supplied). The active project index is reported up via `onActiveChange`
- * so the caller can drive its own details panel (title, summary, bullets,
- * link) per project, rather than the single shared category-level copy
- * used elsewhere.
- *
- * Navigation stays quiet on hover. Wheel / trackpad scroll over the stage
- * steps projects; arrow and dot controls still work as before. Clicking a
- * side card also focuses it.
+ * Coverflow gallery for website previews and print images, with the same
+ * Expand pattern as VideoGallery (controls button + double-click).
  */
 export function WebsiteGallery({ projects, defaultRatio = 'landscape', cardHeight = DEFAULT_CARD_HEIGHT, onActiveChange }) {
+  const isMobile = useIsMobile()
   const [active, setActive] = useState(0)
+  const [expanded, setExpanded] = useState(false)
   const activeRef = useRef(0)
   const wheelLockRef = useRef(false)
-  const STEP = cardHeight * (215 / 485)
+  const stageRef = useRef(null)
+  const ANGLE = isMobile ? ANGLE_MOBILE : ANGLE_DESKTOP
+  const visibleOffset = isMobile ? MAX_VISIBLE_OFFSET_MOBILE : MAX_VISIBLE_OFFSET
+  const STEP = cardHeight * (isMobile ? 0.38 : 215 / 485)
 
   useEffect(() => {
     activeRef.current = active
     onActiveChange?.(active)
   }, [active, onActiveChange])
 
+  // Only reset when the list identity changes — parent often passes a fresh
+  // array reference on every render (e.g. mapped print images).
+  const projectsId = projects?.map((p) => p.key).join('|') ?? ''
+
+  useEffect(() => {
+    setActive(0)
+    setExpanded(false)
+  }, [projectsId])
+
+  useEffect(() => {
+    if (expanded && projects[active] && !canExpand(projects[active])) {
+      setExpanded(false)
+    }
+  }, [active, expanded, projects])
+
   function go(next) {
-    setActive(Math.max(0, Math.min(projects.length - 1, next)))
+    setActive((current) => {
+      const target = typeof next === 'function' ? next(current) : next
+      return Math.max(0, Math.min(projects.length - 1, target))
+    })
   }
+
+  function goPrev() {
+    go((current) => current - 1)
+  }
+
+  function goNext() {
+    go((current) => current + 1)
+  }
+
+  function onStageWheel(e) {
+    if (expanded) return false
+    if (Math.abs(e.deltaY) < 8 && Math.abs(e.deltaX) < 8) return false
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (wheelLockRef.current) return true
+    wheelLockRef.current = true
+    window.setTimeout(() => {
+      wheelLockRef.current = false
+    }, WHEEL_COOLDOWN_MS)
+
+    const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX
+    go(activeRef.current + (delta > 0 ? 1 : -1))
+    return true
+  }
+
+  useEffect(() => {
+    const node = stageRef.current
+    if (!node) return undefined
+
+    function onWheel(e) {
+      onStageWheel(e)
+    }
+
+    node.addEventListener('wheel', onWheel, { passive: false })
+    return () => node.removeEventListener('wheel', onWheel)
+  }, [projects?.length, expanded, cardHeight])
 
   function onCardClick(i, project) {
     if (i !== active) {
@@ -53,40 +307,37 @@ export function WebsiteGallery({ projects, defaultRatio = 'landscape', cardHeigh
     }
     const href = project.liveUrl || project.previewUrl || project.url
     if (!href || href === '#') return
+    // Print images have no useful external link — expand instead of opening "#".
+    if (!project.liveUrl && !project.previewUrl && project.image) {
+      setExpanded(true)
+      return
+    }
     window.open(href, '_blank', 'noopener,noreferrer')
   }
 
-  function onStageWheel(e) {
-    // Only react to a clear vertical scroll gesture; ignore tiny jitter.
-    if (Math.abs(e.deltaY) < 8 && Math.abs(e.deltaX) < 8) return
+  if (!projects?.length) return null
 
-    // Keep this scroll inside the gallery so the deck doesn't also advance.
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (wheelLockRef.current) return
-    wheelLockRef.current = true
-    window.setTimeout(() => {
-      wheelLockRef.current = false
-    }, WHEEL_COOLDOWN_MS)
-
-    const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX
-    go(activeRef.current + (delta > 0 ? 1 : -1))
-  }
-
-  const activeWidth = cardWidth(projects[active].ratio || defaultRatio, cardHeight)
+  const activeProject = projects[active]
+  const activeRatio = activeProject.ratio || defaultRatio
+  const activeWidth = cardWidth(activeRatio, cardHeight)
   const leftAnchor = EDGE_PADDING + activeWidth / 2
+  const showExpand = canExpand(activeProject)
 
   return (
-    <div style={styles.root}>
-      <div
-        style={{ ...styles.stage, height: `${cardHeight}px` }}
-        onWheel={onStageWheel}
-      >
+    <div
+      style={styles.root}
+      onWheel={(e) => {
+        // Keep print/web gallery wheel inside this component — never scroll the slide.
+        if (!expanded) {
+          e.stopPropagation()
+        }
+      }}
+    >
+      <div ref={stageRef} style={{ ...styles.stage, height: `${cardHeight}px` }}>
         {projects.map((project, i) => {
           const offset = i - active
           const absOffset = Math.abs(offset)
-          if (absOffset > MAX_VISIBLE_OFFSET) return null
+          if (absOffset > visibleOffset) return null
 
           const ratio = project.ratio || defaultRatio
           const width = cardWidth(ratio, cardHeight)
@@ -98,6 +349,10 @@ export function WebsiteGallery({ projects, defaultRatio = 'landscape', cardHeigh
               key={project.key}
               type="button"
               onClick={() => onCardClick(i, project)}
+              onDoubleClick={(e) => {
+                e.preventDefault()
+                if (isActive && canExpand(project)) setExpanded(true)
+              }}
               aria-label={project.title}
               aria-current={isActive}
               style={{
@@ -107,7 +362,7 @@ export function WebsiteGallery({ projects, defaultRatio = 'landscape', cardHeigh
                 left: leftAnchor,
                 marginLeft: -width / 2,
                 zIndex: 100 - absOffset,
-                cursor: isActive && (project.liveUrl || project.previewUrl || project.url) ? 'pointer' : isActive ? 'default' : 'pointer',
+                cursor: isActive && (project.liveUrl || project.previewUrl || project.url || project.image) ? 'pointer' : isActive ? 'default' : 'pointer',
               }}
               animate={{
                 x: offset * STEP,
@@ -120,8 +375,6 @@ export function WebsiteGallery({ projects, defaultRatio = 'landscape', cardHeigh
             >
               {project.previewUrl ? (
                 <div style={styles.previewFrame} aria-hidden={!isActive}>
-                  {/* Only mount the live site on the active card so we don't
-                      spin up a fleet of remote documents in the coverflow. */}
                   {isActive && (
                     <iframe
                       src={project.previewUrl}
@@ -158,7 +411,8 @@ export function WebsiteGallery({ projects, defaultRatio = 'landscape', cardHeigh
       <div
         style={{
           ...styles.controls,
-          width: activeWidth,
+          width: '100%',
+          maxWidth: '100%',
           marginLeft: EDGE_PADDING,
         }}
       >
@@ -166,13 +420,9 @@ export function WebsiteGallery({ projects, defaultRatio = 'landscape', cardHeigh
           <ChevronLeft size={16} strokeWidth={1.5} />
         </button>
 
-        <div style={styles.dots}>
-          {projects.map((p, i) => (
-            <button key={p.key} onClick={() => go(i)} aria-label={`Go to ${p.title}`} style={styles.dotBtn}>
-              <span style={{ ...styles.dot, background: i === active ? 'var(--color-accent-on-dark)' : 'var(--color-ink-line)' }} />
-            </button>
-          ))}
-        </div>
+        <span style={styles.counterBadge} aria-live="polite">
+          {active + 1} / {projects.length}
+        </span>
 
         <button
           type="button"
@@ -184,19 +434,57 @@ export function WebsiteGallery({ projects, defaultRatio = 'landscape', cardHeigh
           <ChevronRight size={16} strokeWidth={1.5} />
         </button>
 
+        {projects.length <= 10 && (
+          <div style={styles.dots}>
+            {projects.map((p, i) => (
+              <button key={p.key} type="button" onClick={() => go(i)} aria-label={`Go to ${p.title}`} style={styles.dotBtn}>
+                <span style={{ ...styles.dot, background: i === active ? 'var(--color-accent-on-dark)' : 'var(--color-ink-line)' }} />
+              </button>
+            ))}
+          </div>
+        )}
+
+        {showExpand && (
+          <button type="button" onClick={() => setExpanded(true)} style={styles.expandControl} aria-label="Expand image">
+            <Maximize2 size={15} strokeWidth={1.5} />
+            {!isMobile && 'Expand'}
+          </button>
+        )}
+
         <AnimatePresence mode="wait">
           <motion.span
-            key={projects[active].key}
+            key={activeProject.key}
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             style={styles.caption}
           >
-            {projects[active].title}
+            {activeProject.title}
           </motion.span>
         </AnimatePresence>
       </div>
+
+      {createPortal(
+        <AnimatePresence>
+          {expanded && showExpand ? (
+            <ExpandModal
+              key="print-expand-modal"
+              project={activeProject}
+              ratio={activeRatio}
+              index={active}
+              total={projects.length}
+              canPrev={active > 0}
+              canNext={active < projects.length - 1}
+              onPrev={goPrev}
+              onNext={goNext}
+              onClose={() => setExpanded(false)}
+              isMobile={isMobile}
+            />
+          ) : null}
+        </AnimatePresence>,
+        document.body,
+      )}
     </div>
   )
 }
@@ -231,10 +519,9 @@ const styles = {
     objectPosition: 'center',
     display: 'block',
     background: 'var(--color-ink-raised)',
+    padding: '6px',
+    boxSizing: 'border-box',
   },
-  // Live site preview: render a desktop-width page scaled down to fit the
-  // card so the homepage reads as a miniature screenshot rather than a
-  // cramped mobile viewport.
   previewFrame: {
     position: 'relative',
     width: '100%',
@@ -283,8 +570,10 @@ const styles = {
   controls: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: '16px',
+    justifyContent: 'flex-start',
+    gap: '12px',
+    minWidth: 0,
+    flexWrap: 'nowrap',
   },
   arrowBtn: {
     display: 'flex',
@@ -297,13 +586,35 @@ const styles = {
     color: 'var(--color-cream)',
     flexShrink: 0,
   },
+  expandControl: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    minWidth: '36px',
+    height: '36px',
+    padding: '0 12px',
+    borderRadius: '999px',
+    border: '1px solid var(--color-ink-line)',
+    color: 'var(--color-cream)',
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
+    flexShrink: 0,
+    cursor: 'pointer',
+    background: 'transparent',
+  },
   dots: {
     display: 'flex',
     gap: '7px',
-    flexShrink: 0,
+    flexShrink: 1,
+    minWidth: 0,
+    overflow: 'hidden',
   },
   dotBtn: {
     padding: '6px 2px',
+    flexShrink: 0,
   },
   dot: {
     display: 'block',
@@ -315,12 +626,141 @@ const styles = {
     fontFamily: 'var(--font-body)',
     fontSize: '15px',
     color: 'var(--color-cream-dim)',
-    marginLeft: '8px',
-    paddingLeft: '16px',
+    marginLeft: '4px',
+    paddingLeft: '14px',
     borderLeft: '1px solid var(--color-ink-line)',
-    maxWidth: '160px',
+    minWidth: 0,
+    maxWidth: '280px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+    flex: '1 1 auto',
+  },
+  counterBadge: {
+    flexShrink: 0,
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px',
+    letterSpacing: '0.06em',
+    color: 'var(--color-cream)',
+    minWidth: '3.5em',
+    textAlign: 'center',
+  },
+  counter: {
+    flexShrink: 0,
+    fontSize: '13px',
+    letterSpacing: '0.06em',
+    color: 'var(--color-cream-faint)',
+  },
+  modalBackdrop: {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 2000,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '24px',
+    background: 'rgba(11, 22, 19, 0.82)',
+    backdropFilter: 'blur(6px)',
+  },
+  modalDialog: {
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+    maxWidth: '100%',
+  },
+  modalChrome: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '16px',
+  },
+  modalMeta: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    minWidth: 0,
+  },
+  modalTitle: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '15px',
+    color: 'var(--color-cream)',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  modalClose: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '40px',
+    height: '40px',
+    borderRadius: '999px',
+    border: '1px solid var(--color-ink-line)',
+    color: 'var(--color-cream)',
+    background: 'rgba(18, 37, 31, 0.9)',
+    flexShrink: 0,
+    cursor: 'pointer',
+  },
+  modalStageWrap: {
+    position: 'relative',
+    width: '100%',
+  },
+  modalNavBtn: {
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    zIndex: 6,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '48px',
+    height: '48px',
+    borderRadius: '999px',
+    border: '1px solid var(--color-ink-line)',
+    color: 'var(--color-cream)',
+    background: 'rgba(18, 37, 31, 0.92)',
+    cursor: 'pointer',
+  },
+  modalNavPrev: {
+    left: '12px',
+  },
+  modalNavNext: {
+    right: '12px',
+  },
+  modalStage: {
+    position: 'relative',
+    width: '100%',
+    overflow: 'hidden',
+    border: '1px solid var(--color-ink-line)',
+    background: 'var(--color-ink-raised)',
+  },
+  modalMedia: {
+    width: '100%',
+    height: '100%',
+  },
+  modalImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
+    objectPosition: 'center',
+    display: 'block',
+    background: 'var(--color-ink-raised)',
+    padding: '8px',
+    boxSizing: 'border-box',
+  },
+  modalIframe: {
+    width: '100%',
+    height: '100%',
+    border: 'none',
+    display: 'block',
+    background: '#fff',
+  },
+  modalHint: {
+    margin: 0,
+    fontFamily: 'var(--font-body)',
+    fontSize: '12px',
+    letterSpacing: '0.04em',
+    color: 'var(--color-cream-faint)',
   },
 }

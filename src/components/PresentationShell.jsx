@@ -4,6 +4,7 @@ import { Maximize, Minimize } from 'lucide-react'
 import { useKeyboardNav } from '../hooks/useKeyboardNav.js'
 import { useSwipeNav } from '../hooks/useSwipeNav.js'
 import { useWheelNav } from '../hooks/useWheelNav.js'
+import { isMediaExpanded } from '../hooks/mediaExpandLock.js'
 import { useStageScale } from '../hooks/useStageScale.js'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion.js'
 import { useFullscreen } from '../hooks/useFullscreen.js'
@@ -125,6 +126,7 @@ export function PresentationShell({ slides }) {
   }, [])
 
   const onNext = useCallback(() => {
+    if (isMediaExpanded()) return
     if (slides[index].id === 'selected-work' && selectedWorkTab < SELECTED_WORK_TAB_COUNT - 1) {
       setSelectedWorkTab((t) => t + 1)
       return
@@ -132,6 +134,7 @@ export function PresentationShell({ slides }) {
     goTo(index + 1)
   }, [goTo, index, selectedWorkTab, slides])
   const onPrev = useCallback(() => {
+    if (isMediaExpanded()) return
     if (slides[index].id === 'selected-work' && selectedWorkTab > 0) {
       setSelectedWorkTab((t) => t - 1)
       return
@@ -167,6 +170,14 @@ export function PresentationShell({ slides }) {
             width: stageWidth,
             height: stageHeight,
             transform: isMobile ? 'none' : `scale(${scale})`,
+            ...(isMobile
+              ? {
+                  width: '100%',
+                  height: '100%',
+                  maxWidth: '100vw',
+                  maxHeight: '100dvh',
+                }
+              : null),
           }}
           {...swipeHandlers}
           onWheel={handleWheel}

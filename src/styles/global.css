@@ -72,7 +72,10 @@ body {
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  touch-action: pan-y;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overscroll-behavior: none;
 }
 
 img,
@@ -158,5 +161,21 @@ a {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+  }
+
+  .display-xl,
+  .display-lg {
+    line-height: 1.12;
+  }
+
+  .body-lg {
+    line-height: 1.45;
   }
 }

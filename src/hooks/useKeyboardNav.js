@@ -1,8 +1,10 @@
 import { useEffect } from 'react'
+import { isMediaExpanded } from './mediaExpandLock.js'
 
 export function useKeyboardNav({ onNext, onPrev, onFirst, onLast }) {
   useEffect(() => {
     function handleKeyDown(e) {
+      if (isMediaExpanded()) return
       switch (e.key) {
         case 'ArrowRight':
           e.preventDefault()

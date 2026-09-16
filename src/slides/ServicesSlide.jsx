@@ -28,13 +28,14 @@ export default function ServicesSlide({ meta }) {
           top: isMobile ? 64 : 152,
           bottom: SAFE.bottom,
           gap: isMobile ? '24px' : '32px',
-          overflowY: isMobile ? 'auto' : 'visible',
+          overflow: isMobile ? 'auto' : 'hidden',
           WebkitOverflowScrolling: 'touch',
+          overscrollBehavior: 'contain',
         }}
       >
         <div style={{ ...styles.top, gap: isMobile ? '16px' : '24px' }}>
           <SectionLabel index={meta.index} total={meta.total} title={meta.title} />
-          <SectionHeadline className="display-lg" style={{ ...styles.headline, fontSize: isMobile ? '36px' : '88px' }}>
+          <SectionHeadline className="display-lg" style={{ ...styles.headline, fontSize: isMobile ? '32px' : '88px' }}>
             What we create.
           </SectionHeadline>
         </div>
@@ -42,11 +43,12 @@ export default function ServicesSlide({ meta }) {
         <StaggerGroup
           style={{
             ...styles.grid,
-            gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(3, 1fr)',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
             gridTemplateRows: isMobile ? 'auto' : 'repeat(2, auto)',
             columnGap: isMobile ? '18px' : '56px',
-            rowGap: isMobile ? '22px' : '40px',
+            rowGap: isMobile ? '18px' : '40px',
             alignContent: 'start',
+            paddingBottom: isMobile ? '12px' : 0,
           }}
         >
           {serviceCategories.map((s, i) => (

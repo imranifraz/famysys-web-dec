@@ -9,9 +9,9 @@ export const SAFE = {
 
 // Tighter insets for the fluid mobile stage (stage = viewport, scale 1).
 export const SAFE_MOBILE = {
-  top: 72,
-  bottom: 100,
-  side: 20,
+  top: 64,
+  bottom: 96,
+  side: 16,
 }
 
 export function safeInsets(isMobile) {

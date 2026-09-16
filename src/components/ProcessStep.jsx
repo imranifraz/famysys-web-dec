@@ -1,12 +1,21 @@
-export function ProcessStep({ index, title, copy, isLast }) {
+export function ProcessStep({ index, title, copy, isLast, compact = false, vertical = false }) {
   return (
-    <div style={styles.step}>
+    <div style={{ ...styles.step, gap: compact ? '10px' : '18px' }}>
       <div style={styles.top}>
-        <span style={styles.index}>{index}</span>
-        {!isLast && <span style={styles.connector} aria-hidden="true" />}
+        <span style={{ ...styles.index, fontSize: compact ? '28px' : '42px' }}>{index}</span>
+        {!isLast && !vertical && <span style={styles.connector} aria-hidden="true" />}
+        {!isLast && vertical && <span style={styles.connectorVertical} aria-hidden="true" />}
       </div>
-      <h3 style={styles.title}>{title}</h3>
-      <p style={styles.copy}>{copy}</p>
+      <h3 style={{ ...styles.title, fontSize: compact ? '18px' : '24px' }}>{title}</h3>
+      <p
+        style={{
+          ...styles.copy,
+          fontSize: compact ? '14px' : '16.5px',
+          maxWidth: compact ? 'none' : '300px',
+        }}
+      >
+        {copy}
+      </p>
     </div>
   )
 }
@@ -15,7 +24,6 @@ const styles = {
   step: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '18px',
     flex: 1,
     position: 'relative',
   },
@@ -26,7 +34,6 @@ const styles = {
   },
   index: {
     fontFamily: 'var(--font-display)',
-    fontSize: '42px',
     color: 'var(--color-cream-faint)',
     flexShrink: 0,
   },
@@ -36,9 +43,11 @@ const styles = {
     background: 'var(--color-ink-line)',
     marginLeft: '16px',
   },
+  connectorVertical: {
+    display: 'none',
+  },
   title: {
     fontFamily: 'var(--font-body)',
-    fontSize: '24px',
     fontWeight: 600,
     letterSpacing: '0.01em',
     color: 'var(--color-fg)',
@@ -46,10 +55,8 @@ const styles = {
   },
   copy: {
     fontFamily: 'var(--font-body)',
-    fontSize: '16.5px',
     lineHeight: 1.55,
     color: 'var(--color-cream-faint)',
     margin: 0,
-    maxWidth: '300px',
   },
 }
