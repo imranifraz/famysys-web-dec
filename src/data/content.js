@@ -298,20 +298,20 @@ export const portfolioCategories = [
     },
     videos: [
       {
-        title: 'Before vs After - Imported',
-        src: 'https://drive.google.com/file/d/1RnvYjZq6x727HBbUsALsJwxuKrLvePXS/preview',
-      },
-      {
-        title: 'Before vs After - Burger Cafe',
-        src: 'https://drive.google.com/file/d/11lP5-KN87haqGIYmdDLh7fLb4nz42O0z/preview',
-      },
-      {
         title: 'Before vs After - Ice Cream',
         src: 'https://drive.google.com/file/d/15h4Nx-oqZH0DS1aKpZPfDjhZ4xez5uL2/preview',
       },
       {
         title: 'GFT Before After',
         src: 'https://drive.google.com/file/d/1Pwnv1eG31ZCAKKa96PZQbUzARJJAuttd/preview',
+      },
+      {
+        title: 'Before vs After - Imported',
+        src: 'https://drive.google.com/file/d/1RnvYjZq6x727HBbUsALsJwxuKrLvePXS/preview',
+      },
+      {
+        title: 'Before vs After - Burger Cafe',
+        src: 'https://drive.google.com/file/d/11lP5-KN87haqGIYmdDLh7fLb4nz42O0z/preview',
       },
     ],
   },
@@ -358,18 +358,18 @@ export const portfolioCategories = [
     ratio: 'landscape',
     process: {
       input:
-        'You share the topic, audience and learning goal — plus any existing script, slides, brand guidelines or training material we should follow.',
+        'Share a photo (or your preferred look), the script or talking points, and where the video will run — training, onboarding or marketing.',
       output:
-        'We produce polished presenter-led videos ready for training, onboarding or marketing. Tools: Synthesia, GPT & Claude for script writing and planning.',
+        'We turn it into an avatar-based presenter video: your likeness as a digital avatar, speaking your message in a polished, ready-to-use cut. Tools: Synthesia — with GPT & Claude for scripts.',
     },
     videos: [
       {
-        title: 'Control Your CPARS to Win More Contracts',
-        src: 'https://drive.google.com/file/d/1qXUtHdtX5h0RfcfPiQ7qUccUEwvRZK5j/preview',
-      },
-      {
         title: 'CPARS Million Dollar Wake Up',
         src: 'https://drive.google.com/file/d/1B6g7KnKRtYJP84-BXq2G_mQoH-h7nQM6/preview',
+      },
+      {
+        title: 'Control Your CPARS to Win More Contracts',
+        src: 'https://drive.google.com/file/d/1qXUtHdtX5h0RfcfPiQ7qUccUEwvRZK5j/preview',
       },
       {
         title: 'Define Epidemology',

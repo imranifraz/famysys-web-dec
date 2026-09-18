@@ -1,77 +1,61 @@
-import { useEffect, useRef, useState } from 'react'
+import { useMemo } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 
-const DESIGN_W = 1920
-const DESIGN_H = 1080
+/**
+ * Resolve an embeddable URL for the corporate deck.
+ * famysys.com sends X-Frame-Options: SAMEORIGIN, so:
+ * - on famysys.com → relative /corporate/ (allowed)
+ * - in Vite dev → /corporate-embed/ proxy that strips the frame header
+ * - elsewhere → direct URL (blocked unless server headers are relaxed)
+ */
+function resolveEmbedSrc(src) {
+  if (!src) return src
+  if (import.meta.env.DEV) return '/corporate-embed/'
+  if (typeof window !== 'undefined' && /(^|\.)famysys\.com$/i.test(window.location.hostname)) {
+    return '/corporate/'
+  }
+  return src
+}
 
 /**
- * Live 1920×1080 deck preview. Cover-scales to fill the slot (no side
- * bars). Click opens the full deck page in a new tab.
+ * Live deck preview in a 16:9 iframe that fills the slot.
+ * The deck lays out to the iframe viewport (no cover-crop scale), so slides
+ * stay fully visible and centered. Corner control opens the full page.
  */
 export function PresentationEmbed({ src, href, title, active = true }) {
-  const frameRef = useRef(null)
-  const [scale, setScale] = useState(1)
+  const embedSrc = useMemo(() => resolveEmbedSrc(src), [src])
+  const openUrl = href || src
 
-  useEffect(() => {
-    const node = frameRef.current
-    if (!node) return undefined
-
-    function measure() {
-      // Layout sizes in stage coords — ignore ancestor CSS transforms.
-      const width = node.offsetWidth
-      const height = node.offsetHeight
-      if (width < 1 || height < 1) return
-      // Cover: fill the whole slot; crop top/bottom or sides as needed.
-      setScale(Math.max(width / DESIGN_W, height / DESIGN_H))
-    }
-
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(node)
-    return () => ro.disconnect()
-  }, [])
-
-  function openDeck() {
-    const target = href || src
-    if (!target) return
-    window.open(target, '_blank', 'noopener,noreferrer')
+  function openDeck(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!openUrl) return
+    window.open(openUrl, '_blank', 'noopener,noreferrer')
   }
 
   return (
-    <button
-      ref={frameRef}
-      type="button"
-      onClick={openDeck}
-      aria-label={`Open ${title || 'presentation'} deck`}
+    <div
+      data-media-player="true"
       style={styles.frame}
+      aria-label={`${title || 'Presentation'} deck preview`}
     >
       {active && (
-        <div
-          style={{
-            ...styles.stage,
-            width: DESIGN_W,
-            height: DESIGN_H,
-            transform: `translate(-50%, -50%) scale(${scale})`,
-          }}
-          aria-hidden
-        >
-          <iframe
-            style={styles.iframe}
-            src={src}
-            title={title}
-            allow="fullscreen"
-            loading="lazy"
-            tabIndex={-1}
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-        </div>
+        <iframe
+          style={styles.iframe}
+          src={embedSrc}
+          title={title || 'Presentation deck'}
+          allow="fullscreen; autoplay"
+          allowFullScreen
+          loading="eager"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
       )}
 
-      <span style={styles.hint}>
+      <a href={openUrl} target="_blank" rel="noopener noreferrer" onClick={openDeck} style={styles.hint}>
         Open full deck
         <ArrowUpRight size={14} strokeWidth={1.75} />
-      </span>
-    </button>
+      </a>
+    </div>
   )
 }
 
@@ -80,32 +64,24 @@ const styles = {
     position: 'relative',
     width: '100%',
     height: '100%',
+    minHeight: '220px',
     overflow: 'hidden',
     border: '1px solid var(--color-ink-line)',
     background: '#0a1628',
-    padding: 0,
-    cursor: 'pointer',
-    display: 'block',
-  },
-  stage: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transformOrigin: 'center center',
-    pointerEvents: 'none',
   },
   iframe: {
+    position: 'absolute',
+    inset: 0,
     width: '100%',
     height: '100%',
     border: 'none',
     display: 'block',
-    pointerEvents: 'none',
     background: '#0a1628',
   },
   hint: {
     position: 'absolute',
-    right: '16px',
-    bottom: '16px',
+    right: '12px',
+    bottom: '12px',
     zIndex: 2,
     display: 'inline-flex',
     alignItems: 'center',
@@ -119,6 +95,6 @@ const styles = {
     border: '1px solid var(--color-ink-line)',
     borderRadius: '999px',
     padding: '8px 12px',
-    pointerEvents: 'none',
+    textDecoration: 'none',
   },
 }

@@ -128,14 +128,28 @@ export default function SelectedWorkSlide({ meta, active, activeTab, onActiveTab
       style={{
         ...styles.presentationStage,
         flexDirection: isMobile ? 'column' : 'row',
-        gap: isMobile ? '12px' : '20px',
+        alignItems: isMobile ? 'stretch' : 'center',
+        justifyContent: isMobile ? 'flex-start' : 'flex-start',
+        gap: isMobile ? '12px' : '28px',
       }}
     >
       <div
         style={{
           ...styles.presentationFrame,
-          minHeight: isMobile ? '200px' : 0,
-          height: isMobile ? '220px' : '100%',
+          ...(isMobile
+            ? {
+                width: '100%',
+                height: 'auto',
+                aspectRatio: '16 / 9',
+                minHeight: '200px',
+              }
+            : {
+                // Fit the full 16:9 deck inside the available stage — never crop.
+                height: '100%',
+                width: 'auto',
+                maxWidth: 'calc(100% - 268px)',
+                aspectRatio: '16 / 9',
+              }),
         }}
       >
         <PresentationEmbed
@@ -147,13 +161,27 @@ export default function SelectedWorkSlide({ meta, active, activeTab, onActiveTab
       </div>
 
       {!isMobile && (
-        <div style={{ ...styles.presentationMeta, width: '200px', gap: '14px' }}>
+        <div style={{ ...styles.presentationMeta, width: '240px', gap: '16px', flexShrink: 0 }}>
           <div>
             <span style={{ ...styles.detailsEyebrow, fontSize: '12px' }}>{current.category}</span>
-            <h3 style={{ ...styles.detailsLabelSmall, fontSize: '26px', margin: '6px 0 0' }}>
+            <h3 style={{ ...styles.detailsLabelSmall, fontSize: '28px', margin: '6px 0 0' }}>
               {current.title || current.label}
             </h3>
           </div>
+          {current.summary && (
+            <p style={{ ...styles.detailsCopy, fontSize: '15px', margin: 0, lineHeight: 1.5 }}>
+              {current.summary}
+            </p>
+          )}
+          <a
+            href={current.url || current.embedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.openDeckLink}
+          >
+            Open the full deck
+            <ArrowUpRight size={15} strokeWidth={1.75} />
+          </a>
         </div>
       )}
     </div>
@@ -499,12 +527,13 @@ const styles = {
     flex: '1 1 auto',
     minWidth: 0,
     minHeight: 0,
-    height: '100%',
-    width: '100%',
+    position: 'relative',
+    alignSelf: 'center',
   },
   presentationMeta: {
     flexShrink: 0,
     display: 'flex',
+    flexDirection: 'column',
     paddingTop: '4px',
   },
   mediaCard: {
